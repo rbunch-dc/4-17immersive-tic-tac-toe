@@ -10,6 +10,18 @@
 
 //Initialize whosTurn at player 1 / x
 var whosTurn = 1;
+var winningCombos = [
+	['A1','B1','C1'], //Row1
+	['A2','B2','C2'], //Row2
+	['A3','B3','C3'], //Row3
+	['A1','A2','A3'], //Column1
+	['B1','B2','B3'], //Column2
+	['C1','C2','C3'], //Column3
+	['A1','B2','C3'], //Diag1
+	['A3','B2','C1'] //Diag2
+
+
+]
 
 var squares = document.getElementsByClassName('square');
 for(let i = 0; i < squares.length; i++){
@@ -22,8 +34,9 @@ for(let i = 0; i < squares.length; i++){
 
 // - Create a marksquare function
 function markSquare(currentSquare){
+	console.log(currentSquare.id);
 	var squareResult = ""
-	console.log(currentSquare.innerHTML)
+	// console.log(currentSquare.innerHTML)
 	if((currentSquare.innerHTML == "X") || (currentSquare.innerHTML == "O")){
 		// console.log("This square is taken")
 		squareResult = "Sorry, this square is taken."
