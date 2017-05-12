@@ -12,6 +12,7 @@
 var whosTurn = 1;
 var player1Squares = [];
 var player2Squares = [];
+var takenSquares = []
 var winningCombos = [
 	['A1','B1','C1'], //Row1
 	['A2','B2','C2'], //Row2
@@ -24,6 +25,11 @@ var winningCombos = [
 ]
 var gameOverBool = false;
 var onePlayerGame = true;
+const images = [
+	'rap.jpg',
+	'evilness.jpg'	
+]
+
 
 var squares = document.getElementsByClassName('square');
 for(let i = 0; i < squares.length; i++){
@@ -41,30 +47,33 @@ function markSquare(currentSquare){
 	console.log(currentSquare.id);
 	var squareResult = ""
 	// console.log(currentSquare.innerHTML)
-	if((currentSquare.innerHTML == "X") || (currentSquare.innerHTML == "O")){
+	if(currentSquare.innerHTML == '&nbs;'){
 		// console.log("This square is taken")
 		squareResult = "Sorry, this square is taken."
 	}else if(gameOverBool){
 		squareResult = "Someone has won the game!"
 	}else if(whosTurn == 1){
-		currentSquare.innerHTML = "X"
+		currentSquare.innerHTML = '<img src="./rap.jpg">';
 		whosTurn = 2;
 		player1Squares.push(currentSquare.id)
+		takenSquares.push(currentSquare.id);
 		checkWin(player1Squares,1);
-		if(onePlayerGame){
+		if((onePlayerGame) && (takenSquares.length < 9)){
 			computerMove();
 		}
 	}else{
-		currentSquare.innerHTML = "O"
+		currentSquare.innerHTML = '<img src="./evilness.png">'
 		whosTurn = 1;
 		player2Squares.push(currentSquare.id)
+		takenSquares.push(currentSquare.id);
 		checkWin(player2Squares,2);
 	}
-
 	// console.log(player1Squares);
 	// console.log(player2Squares);
-	var messageElement = document.getElementById('message');	
-	messageElement.innerHTML = squareResult;
+	if(!gameOverBool){
+		var messageElement = document.getElementById('message');	
+		messageElement.innerHTML = squareResult;		
+	}
 }
 
 function computerMove(){
@@ -72,6 +81,16 @@ function computerMove(){
 	// see if that square is empty
 	// if it is, send it to square
 	// if it's not, keep looking
+	var sqaureFound = false;
+	while(!sqaureFound){
+		rand = Math.floor(Math.random() * 9);
+		console.log(takenSquares)
+		if(takenSquares.indexOf(squares[rand].id) == -1){
+			// square not taken. Take it.
+			sqaureFound = true;
+		}
+	}
+	markSquare(squares[rand]);
 }
 
 function checkWin(currentPlayersSquares, whoJustWent){
@@ -101,10 +120,7 @@ function checkWin(currentPlayersSquares, whoJustWent){
 function gameOver(whoJustWon,winningCombo){
 	var messageElement = document.getElementById('message');	
 	var message = "Congratulations to player " + whoJustWon + ". You won with " + winningCombo;
-	// console.log(message);
-	// console.dir(messageElement)
-	messageElement.innerHTML = message;
-	// console.dir(messageElement)
+	messageElement.innerHTML = "Congratulations to player " + whoJustWon + ". You won with " + winningCombo;
 	for(let i = 0; i<winningCombo.length;i++){
 		document.getElementById(winningCombo[i]).className += ' winning-square';
 	}
